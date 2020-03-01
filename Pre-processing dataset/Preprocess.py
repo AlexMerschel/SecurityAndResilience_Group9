@@ -1,0 +1,75 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+
+import csv
+from skimage import io
+from skimage.transform import resize
+import os, random, shutil
+
+def pre_processing(root):
+        csv_file=open(root)    #open csv file
+        csv_reader_lines = csv.reader(csv_file)   #read csv file
+        data = []
+        for lines in csv_reader_lines:
+            data.append(lines)
+        del data[0]
+        #print(data)
+        location = []  #get the location info of images
+        for index in range(len(data)):
+            string = ''.join(data[index])
+            #print(string)
+            array = string.split(';')
+            line_info=[]
+            line_info.append(array[0])
+            line_info.append(array[3])
+            line_info.append(array[4])
+            line_info.append(array[5])
+            line_info.append(array[6])
+            location.append(line_info)
+        #print (location)
+        return location
+    
+def create_data(desktop,name):  #create dataset file
+        os.mkdir(desktop+name)
+        for i in range(0,43):
+            folder = str(i).rjust(2,'0')
+            #print(folder)
+            r = desktop+"/Final_Training/Images/000"
+            root = r+folder
+            for j in os.walk(root):
+                file = j[2]
+            #print(root+"/GT-000"+folder+".csv")
+            location = pre_processing(root+"/GT-000"+folder+".csv")
+            #print(location)
+            for m in location:
+                #print(m[0])
+                #print("##############")
+                l = file.index(m[0])
+                #print(file[l])
+                picture = io.imread(root+"/"+file[l])# 图片路径
+                cut = picture[int(m[1]):int(m[3]),int(m[2]):int(m[4]),:]   #use location info to cut images
+                num_px = 40
+                my_image = resize(cut, output_shape=(num_px,num_px))  #get 40x40 images
+                io.imsave(desktop+name+"/"+folder+"_"+m[0], my_image)
+        return
+
+def moveFile(fileDir,tarDir):
+        pathDir = os.listdir(fileDir)    #read dataset file root
+        filenumber=len(pathDir)
+        rate=0.8    #set the rate of the images needed here is 80%
+        picknumber=int(filenumber*rate)
+        sample = random.sample(pathDir, picknumber)  #random pick images
+        #print (sample)
+        os.mkdir(tarDir)
+        for name in sample:
+                shutil.move(fileDir+"/"+name, tarDir+"/"+name)   #move to train set folder
+        return
+
+if __name__ == '__main__':
+        desk_root = "/C:/Users/Administrator/Desktop/"
+        create_data(desk_root,"test_set")
+        fileDir = desk_root+"test_set"
+        tarDir = desk_root+"train_set"
+        moveFile(fileDir,tarDir)
+
