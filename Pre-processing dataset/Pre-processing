@@ -63,7 +63,7 @@ def moveFile(fileDir,tarDir):
         return
 
 if __name__ == '__main__':
-        desk_root = "/C:/Users/Administrator/Desktop/"
+        desk_root = "C:/Users/Ausizio/OneDrive - Newcastle University/Semester 2/Project - Security and Resilience/SecurityAndResilience_Group9/data/train/GTSRB"
         create_data(desk_root,"test_set")
         fileDir = desk_root+"test_set"
         tarDir = desk_root+"train_set"
