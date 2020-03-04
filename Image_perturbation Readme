@@ -1,0 +1,26 @@
+Please carefully go through this file before executing the code of AlterImg.py
+
+On successful execution of this program you can see a GUI which has 7 different operation that can be applied to an image.
+1. Grayscale
+2. Rotate
+3. Blur
+4. Distort
+5. Ripple
+6. Salt & Pepper (Gaussian)
+7. One Pixel Attack
+This GUI acceps the parameter from the user and also contains the sample parameter which
+apply's the amount of perturbation to be performed on an image to the selected operation.
+
+The options on BLUE checkbox represents that the operation cannot be combined with other operations like (Grayscale,Rotate,Blur,Distort)
+However operation in non BLUE color can be combined to perform the operation simultaneously.
+
+Eg.. If an image needs to be perturbated with Grayscale, Rotate, Blur, Distort then all the four checkbox can be selected at the same time and
+the resultant image will be stored in "Output" folder inside transformed directory with all the four operations performed.
+But you cannot combine operation in BLUE color with others. IF combined only the BLUE colored checkbox operation will be performed
+and stored in respective operation folder inside Transformed directory.
+
+The GUI is designed to accept 'n' number of images within the folder. Therefore you will be asked to choose the folder that contains the images
+when you press the process button .
+
+NOTE: The input folder should only contain images and not other files or folder. If anything is present then application will result in exception
+and does not move further.
