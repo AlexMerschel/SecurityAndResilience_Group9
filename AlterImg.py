@@ -9,8 +9,6 @@ import cv2
 import numpy as nm
 from skimage.util import random_noise
 
-# import matplotlib.pyplot as plot
-# import skimage
 
 # For creating applet - GUI
 window = tkinter.Tk()
@@ -89,14 +87,14 @@ def grscl(img, input):
 
 
 # Function to rotate the image with respect to certain degrees with the help of PIL package
-def rotn(img,input):
+def rotn(img, input):
     input = int(input)
     rotated = img.rotate(input)
     return rotated
 
 
 # Function to blur the image with respect to certain radius amount with the help of PIL package
-def blurImg(img,input):
+def blurImg(img, input):
     input = int(input)
     blurImage = img.filter(ImageFilter.GaussianBlur(radius=input))
     return blurImage
@@ -104,7 +102,7 @@ def blurImg(img,input):
 
 # Function to crop the image for a area and apply blur and then paste
 # it in the same location with the help of PIL package
-def CropNblur(img,List):
+def CropNblur(img, List):
     cropImage = img.crop(List)
     cropImage2 = img.crop((31, 1, 35, 15))
     cropNdBlur = cropImage.filter(ImageFilter.GaussianBlur(radius=10))
@@ -116,23 +114,22 @@ def CropNblur(img,List):
 
 # Function to apply ripple effect on both horizontal and
 # vertical axis of an image with the help of openCV package
-def wave(img, imgNm,input):
-    input=int(input)
+def wave(img, imgNm, input):
+    input = int(input)
     img = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
     rows, cols = img.shape
     WavImg = nm.zeros(img.shape, dtype=img.dtype)
 
     for i in range(rows):
         for j in range(cols):
-            offset_x = int(25.0 * math.sin(2 * 3.14 * i / input))
-            offset_y = int(20.0 * math.cos(2 * 3.14 * j / 150))
+            offset_x = int(15.0 * math.sin(1 * 3.14 * i / input))
+            offset_y = int(15.0 * math.cos(1 * 3.14 * j / 150))
             if i + offset_y < rows and j + offset_x < cols:
                 WavImg[i, j] = img[(i + offset_y) % rows, (j + offset_x) % cols]
             else:
                 WavImg[i, j] = 0
-
-    cv2.imwrite("Transformed/Ripple/" + imgNm, WavImg)
-    cv2.waitKey(0)
+    changedImg = Image.fromarray(nm.uint8(WavImg))
+    changedImg.save("Transformed/Ripple/" + imgNm)
 
 
 # Function to add Salt and Pepper in the image. It is a kind of distorting the
@@ -170,7 +167,6 @@ def process():
         for i in OpxChList:
             Opxllist.append(int(i))
 
-
         DstChList = DstrtChng.split(",")
         Dstllist = []
         for i in DstChList:
@@ -185,7 +181,7 @@ def process():
             if Blrchkvar.get() == 1:
                 img = blurImg(img, BlrinputStr.get())
             if Dschkvar.get() == 1:
-                img = CropNblur(img,Dstllist)
+                img = CropNblur(img, Dstllist)
             if Gauchkvar.get() == 1:
                 saltNpepper(EchImgLctn, i, gausinputStr.get())
             if Rplchkvar.get() == 1:
@@ -194,11 +190,11 @@ def process():
                 OpxlAtk(Opxllist, EchImgLctn, i)
 
             img.save("Transformed/Output/" + i)
-            
+
         # Option selected other than blue checkboxes in the GUI are stored in the standard folder "output".
         if Gschkvar.get() == 1 or Rtchkvar.get() == 1 or Blrchkvar.get() == 1 or Dschkvar.get() == 1:
             mb.showinfo(title="Info", message="Image(s) are stored in the Output folder of Transformed directory")
-        # Options  selected in blue are stored in seperate folder.Where these indicates that images can
+        # Options  selected in blue are stored in separate folder.Where these indicates that images can
         # processed only one at a time.
         if Rplchkvar.get() == 1 or Gauchkvar.get() == 1 or Opxchkvar.get() == 1:
             mb.showinfo(title="Info", message="Image(s) are stored in the appropriate folders of Transformed directory")
